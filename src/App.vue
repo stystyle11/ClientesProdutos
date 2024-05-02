@@ -37,11 +37,8 @@
       </v-btn>
     </v-app-bar>
 
-    <v-main>
-      <!-- 
-      <HelloWorld/>
-      -->
-      <DashBoard/>
+    <v-main class="no-padding">
+      <DashBoard />
     </v-main>
   </v-app>
 </template>
@@ -54,8 +51,8 @@ export default {
   name: 'App',
 
   components: {
-   // HelloWorld,
-   DashBoard
+    // HelloWorld,
+    DashBoard,
   },
 
   data: () => ({
@@ -63,3 +60,4 @@ export default {
   }),
 };
 </script>
+<style scoped></style>
