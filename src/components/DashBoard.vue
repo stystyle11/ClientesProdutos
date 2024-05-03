@@ -41,7 +41,10 @@
       class="no-padding"
     >
       <v-container fluid>
-        <v-row justify="center">
+        <v-row
+          justify="center"
+          class="ma-0"
+        >
           <v-col
             :cols="getColunas"
             :md="getMds"
@@ -49,7 +52,12 @@
             :class="['graphColumn', getMargin]"
           >
             <!-- Main content -->
-
+            <h3 class="font-weight-bold">Produtos maior Estoque</h3>
+            <v-divider
+              width="90%"
+              color="primary"
+              style="margin-bottom: 2rem"
+            ></v-divider>
             <ChartComponent
               v-if="arrayGrafico10QuantidadeProdutos.length == 10"
               label="Quantidade / Produto"
@@ -65,9 +73,14 @@
             :class="['graphColumn', getMargin]"
           >
             <!-- Main content -->
-
+            <h3 class="font-weight-bold">Produtos Zerados</h3>
+            <v-divider
+              width="90%"
+              color="primary"
+              style="margin-bottom: 2rem"
+            ></v-divider>
             <ChartComponent
-              v-if="arrayGraficoNomeProdutosZerados.length == 6"
+              v-if="arrayGraficoNomeProdutosZerados.length > 1"
               label="Quantidade / Produto"
               :graphData="arrayGraficoNomeProdutosZerados"
               :labels="arrayGraficoDataProdutosZerados"
@@ -130,21 +143,21 @@ export default {
       if (this.$vuetify.breakpoint.mdAndDown) {
         return 10;
       }
-      return 4;
+      return 5;
     },
     getColunas() {
       if (this.$vuetify.breakpoint.mdAndDown) {
         return 12;
       }
-      return 4;
+      return 5;
     },
     getMargin() {
       if (this.$vuetify.breakpoint.mdOnly) {
-        return 'mr-6 mb-12';
+        return 'mr-6 mb-16';
       } else if (this.$vuetify.breakpoint.lgAndUp) {
-        return 'mr-8 mb-12';
+        return 'mr-8 mb-16';
       } else {
-        return 'mb-12';
+        return 'mb-16';
       }
     },
   },

@@ -31,7 +31,7 @@ export default {
   components: {
     Bar,
   },
-  props: ['labels', 'label', 'graphData'],
+  props: ['labels', 'label', 'graphData', 'titulo'],
   data() {
     return {
       data: {
