@@ -49,8 +49,15 @@
             :class="['graphColumn', getMargin]"
           >
             <!-- Main content -->
-            <ChartComponent />
+
+            <ChartComponent
+              v-if="arrayGrafico10QuantidadeProdutos.length == 10"
+              label="Quantidade / Produto"
+              :graphData="arrayGrafico10QuantidadeProdutos"
+              :labels="arrayGrafico10NomeProdutos"
+            />
           </v-col>
+
           <v-col
             :cols="getColunas"
             :md="getMds"
@@ -58,10 +65,12 @@
             :class="['graphColumn', getMargin]"
           >
             <!-- Main content -->
+
             <ChartComponent
-              label="Grafico teste"
-              :graphData="[11, 22, 44, 55, 66]"
-              :labels="['Ajenrio', 'Fev', 'March']"
+              v-if="arrayGraficoNomeProdutosZerados.length == 6"
+              label="Quantidade / Produto"
+              :graphData="arrayGraficoNomeProdutosZerados"
+              :labels="arrayGraficoDataProdutosZerados"
             />
           </v-col>
         </v-row>
@@ -82,6 +91,10 @@ export default {
     return {
       drawer: true,
       miniVariant: false,
+      produtos: [],
+      produtosQuantidade10: [],
+      produtosZerados: [],
+
       items: [
         { title: 'Dashboard', icon: 'mdi-view-dashboard' },
         { title: 'Messages', icon: 'mdi-email' },
@@ -92,32 +105,83 @@ export default {
     };
   },
   computed: {
+    arrayGraficoNomeProdutosZerados() {
+      console.log(
+        'problem',
+        this.produtosZerados.map((item) => item.nome)
+      );
+      return this.produtosZerados.map((item) => item.nome);
+    },
+    arrayGraficoDataProdutosZerados() {
+      console.log(
+        'problem2',
+        this.produtosZerados.map((item) => item.data)
+      );
+      return this.produtosZerados.map((item) => item.nome);
+    },
+    arrayGrafico10QuantidadeProdutos() {
+      return this.produtosQuantidade10.map((item) => item.quantidadeEstoque);
+    },
+
+    arrayGrafico10NomeProdutos() {
+      return this.produtosQuantidade10.map((item) => item.nome);
+    },
     getMds() {
       if (this.$vuetify.breakpoint.mdAndDown) {
         return 10;
       }
-      return 5;
+      return 4;
     },
     getColunas() {
       if (this.$vuetify.breakpoint.mdAndDown) {
         return 12;
       }
-      return 5;
+      return 4;
     },
     getMargin() {
       if (this.$vuetify.breakpoint.mdOnly) {
-        return 'mr-6 mb-6';
+        return 'mr-6 mb-12';
       } else if (this.$vuetify.breakpoint.lgAndUp) {
-        return 'mr-8 mb-8';
+        return 'mr-8 mb-12';
       } else {
         return 'mb-12';
       }
     },
   },
+
   methods: {
     toggleDrawer() {
       this.drawer = !this.drawer;
     },
+    async fetchData() {
+      try {
+        const response = await fetch('http://localhost:3400/produtos');
+        const data = await response.json();
+
+        this.produtos = data;
+        this.sortOArrayProdutosZerados();
+        this.sortOArrayDescending();
+      } catch (error) {
+        console.error('Erro dados:', error);
+      }
+    },
+    sortOArrayDescending() {
+      this.produtos.sort((a, b) => b.quantidadeEstoque - a.quantidadeEstoque);
+
+      this.produtosQuantidade10 = this.produtos.slice(0, 10);
+    },
+    sortOArrayProdutosZerados() {
+      console.log('produtoszerados', this.produtos);
+
+      this.produtosZerados = this.produtos.filter(
+        (item) => item.quantidadeEstoque === 0
+      );
+      console.log(this.produtosZerados);
+    },
+  },
+
+  created() {
+    this.fetchData();
   },
 };
 </script>
@@ -128,6 +192,7 @@ export default {
 }
 .graphColumn {
   border-right: 1px solid #ccc;
+  padding: 10px;
 }
 .no-padding {
   padding: 0 !important;
