@@ -1,127 +1,92 @@
 <template>
-  <v-app>
-    <v-navigation-drawer
-      app
-      v-model="drawer"
-      class="sidebar"
-      :mini-variant="miniVariant"
-    >
-      <v-list
-        @click.stop="toggleDrawer"
-        dense
+  <v-container
+    fluid
+    :style="{
+      marginLeft: $vuetify.breakpoint.lgOnly ? '10%' : '0',
+    }"
+  >
+    <v-row class="ma-0 mt-4">
+      <v-col
+        :cols="getColunas"
+        :md="getMds"
+        style="height: 400px"
+        :class="['graphColumn', getMargin]"
       >
-        <v-list-item-group>
-          <v-list-item
-            v-for="(item, index) in items"
-            :key="index"
-            link
-          >
-            <v-list-item-icon>
-              <v-icon>{{ item.icon }}</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>{{ item.title }}</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list-item-group>
-      </v-list>
-    </v-navigation-drawer>
+        <!-- Main content -->
+        <h3 class="font-weight-bold">Produtos maior Estoque</h3>
+        <v-divider
+          width="100%"
+          color="primary"
+          style="margin-bottom: 2rem"
+        ></v-divider>
+        <ChartComponent
+          v-if="arrayGrafico10QuantidadeProdutos.length == 10"
+          label="Quantidade / Produto"
+          :graphData="arrayGrafico10QuantidadeProdutos"
+          :labels="arrayGrafico10NomeProdutos"
+        />
+      </v-col>
 
-    <v-app-bar app>
-      <v-app-bar-nav-icon
-        @change.stop="toggleDrawer"
-        @click.stop="toggleDrawer"
-        v-if="$vuetify.breakpoint.mdAndDown"
-      ></v-app-bar-nav-icon>
-      <v-toolbar-title>Gerenciador Produtos</v-toolbar-title>
-    </v-app-bar>
-
-    <v-main
-      justify="center"
-      class="no-padding"
-    >
-      <v-container fluid>
-        <v-row
-          justify="center"
-          class="ma-0"
+      <v-col
+        :cols="getColunas"
+        :md="getMds"
+        style="height: 400px"
+        :class="['graphColumn', getMargin]"
+      >
+        <!-- Main content -->
+        <h3 class="font-weight-bold">Produtos Zerados</h3>
+        <v-divider
+          width="90%"
+          color="primary"
+          style="margin-bottom: 2rem"
+        ></v-divider>
+        <ChartComponent
+          v-if="arrayGraficoNomeProdutosZerados.length > 1"
+          label="Quantidade / Produto"
+          :graphData="arrayGraficoNomeProdutosZerados"
+          :labels="arrayGraficoDataProdutosZerados"
+        />
+      </v-col>
+      <v-col
+        cols="12"
+        md="6"
+        style="height: 200px"
+      >
+        <v-card
+          class="elevation-2 rounded-lg mt-12"
+          style="width: 100%"
         >
-          <v-col
-            :cols="getColunas"
-            :md="getMds"
-            style="height: 400px"
-            :class="['graphColumn', getMargin]"
-          >
-            <!-- Main content -->
-            <h3 class="font-weight-bold">Produtos maior Estoque</h3>
-            <v-divider
-              width="90%"
-              color="primary"
-              style="margin-bottom: 2rem"
-            ></v-divider>
-            <ChartComponent
-              v-if="arrayGrafico10QuantidadeProdutos.length == 10"
-              label="Quantidade / Produto"
-              :graphData="arrayGrafico10QuantidadeProdutos"
-              :labels="arrayGrafico10NomeProdutos"
-            />
-          </v-col>
-
-          <v-col
-            :cols="getColunas"
-            :md="getMds"
-            style="height: 400px"
-            :class="['graphColumn', getMargin]"
-          >
-            <!-- Main content -->
-            <h3 class="font-weight-bold">Produtos Zerados</h3>
-            <v-divider
-              width="90%"
-              color="primary"
-              style="margin-bottom: 2rem"
-            ></v-divider>
-            <ChartComponent
-              v-if="arrayGraficoNomeProdutosZerados.length > 1"
-              label="Quantidade / Produto"
-              :graphData="arrayGraficoNomeProdutosZerados"
-              :labels="arrayGraficoDataProdutosZerados"
-            />
-          </v-col>
-          <v-col
-            :cols="getColunas"
-            :md="getMds"
-            style="height: 400px"
-            :class="['graphColumn', getMargin]"
-          >
-            <v-card class="elevation-10 rounded-lg">
-              <v-card-title class="text-center">Totçe</v-card-title>
-              <v-card-text class="text-center">
-                <v-icon size="48">icone</v-icon>
-              </v-card-text>
-              <v-card-text class="text-center">descricao</v-card-text>
-            </v-card>
-          </v-col>
-          <v-col
-            :cols="getColunas"
-            :md="getMds"
-            style="height: 400px"
-            :class="['graphColumn', getMargin]"
-          >
-            <v-card class="elevation-10 rounded-lg">
-              <v-card-title class="text-center">Totçe</v-card-title>
-              <v-card-text class="text-center">
-                <v-icon size="48">icone</v-icon>
-              </v-card-text>
-              <v-card-text class="text-center">descricao</v-card-text>
-            </v-card>
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-main>
-  </v-app>
+          <v-card-title class="text-center">Produtos cadastrados:</v-card-title>
+          <v-card-text class="text-center">
+            <v-icon size="48">{{
+              $store.state.produtos.produtos.length
+            }}</v-icon>
+          </v-card-text>
+        </v-card>
+      </v-col>
+      <v-col
+        cols="12"
+        md="6"
+        style="height: 200px"
+      >
+        <v-card
+          class="elevation-2 rounded-lg mt-12"
+          style="width: 100%"
+        >
+          <v-card-title class="text-center">Clientes cadastrados:</v-card-title>
+          <v-card-text class="text-center">
+            <v-icon size="48">{{
+              $store.state.clientes.clientes.length
+            }}</v-icon>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
-import ChartComponent from '@/components/ChartBaseComponent.vue';
+import ChartComponent from '@/components/ChartBaseComponent';
 
 import { mapActions } from 'vuex';
 export default {
@@ -144,8 +109,6 @@ export default {
         { title: 'Messages', icon: 'mdi-email' },
         { title: 'Settings', icon: 'mdi-settings' },
       ],
-
-      clientesCadastrados: [],
     };
   },
   computed: {
@@ -175,10 +138,10 @@ export default {
       return 5;
     },
     getMargin() {
-      if (this.$vuetify.breakpoint.mdOnly) {
-        return 'mr-6 mb-16';
+      if (this.$vuetify.breakpoint.mdAndUp) {
+        return 'margin-left:500px';
       } else if (this.$vuetify.breakpoint.lgAndUp) {
-        return 'mr-8 mb-16';
+        return 'margin-auto mb-16';
       } else {
         return 'mb-16';
       }
@@ -249,8 +212,9 @@ export default {
   background-color: #f5f5f5;
 }
 .graphColumn {
-  border-right: 1px solid #ccc;
   padding: 10px;
+  margin: auto;
+  margin-bottom: 5em;
 }
 .no-padding {
   padding: 0 !important;
