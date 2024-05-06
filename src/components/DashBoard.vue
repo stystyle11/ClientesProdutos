@@ -86,6 +86,34 @@
               :labels="arrayGraficoDataProdutosZerados"
             />
           </v-col>
+          <v-col
+            :cols="getColunas"
+            :md="getMds"
+            style="height: 400px"
+            :class="['graphColumn', getMargin]"
+          >
+            <v-card class="elevation-10 rounded-lg">
+              <v-card-title class="text-center">Totçe</v-card-title>
+              <v-card-text class="text-center">
+                <v-icon size="48">icone</v-icon>
+              </v-card-text>
+              <v-card-text class="text-center">descricao</v-card-text>
+            </v-card>
+          </v-col>
+          <v-col
+            :cols="getColunas"
+            :md="getMds"
+            style="height: 400px"
+            :class="['graphColumn', getMargin]"
+          >
+            <v-card class="elevation-10 rounded-lg">
+              <v-card-title class="text-center">Totçe</v-card-title>
+              <v-card-text class="text-center">
+                <v-icon size="48">icone</v-icon>
+              </v-card-text>
+              <v-card-text class="text-center">descricao</v-card-text>
+            </v-card>
+          </v-col>
         </v-row>
       </v-container>
     </v-main>
@@ -95,6 +123,7 @@
 <script>
 import ChartComponent from '@/components/ChartBaseComponent.vue';
 
+import { mapActions } from 'vuex';
 export default {
   components: {
     ChartComponent,
@@ -104,32 +133,26 @@ export default {
     return {
       drawer: true,
       miniVariant: false,
-      produtos: [],
+
       produtosQuantidade10: [],
       produtosZerados: [],
+      shouldHandleProdutosChange: false,
+      shouldHandleClientesChange: false,
 
       items: [
         { title: 'Dashboard', icon: 'mdi-view-dashboard' },
         { title: 'Messages', icon: 'mdi-email' },
         { title: 'Settings', icon: 'mdi-settings' },
       ],
-      produtosApi: [],
+
       clientesCadastrados: [],
     };
   },
   computed: {
     arrayGraficoNomeProdutosZerados() {
-      console.log(
-        'problem',
-        this.produtosZerados.map((item) => item.nome)
-      );
       return this.produtosZerados.map((item) => item.nome);
     },
     arrayGraficoDataProdutosZerados() {
-      console.log(
-        'problem2',
-        this.produtosZerados.map((item) => item.data)
-      );
       return this.produtosZerados.map((item) => item.nome);
     },
     arrayGrafico10QuantidadeProdutos() {
@@ -161,40 +184,62 @@ export default {
       }
     },
   },
+  watch: {
+    '$store.state.produtos.produtos'(newValue) {
+      if (!this.shouldHandleProdutosChange) {
+        this.sortOArrayDescending(newValue);
+        this.sortOArrayProdutosZerados(newValue);
+      }
+      this.shouldHandleProdutosChange = true;
+    },
+    '$store.state.clientes.clientes'(newValue) {
+      if (!this.shouldHandleClientesChange) {
+        this.clientesCadastrados = newValue;
+        console.log('novo cliente', this.clientesCadastrados);
+        this.shouldHandleClientesChange = true;
+      }
+    },
+  },
 
   methods: {
     toggleDrawer() {
       this.drawer = !this.drawer;
     },
-    async fetchData() {
-      try {
-        const response = await fetch('http://localhost:3400/produtos');
-        const data = await response.json();
+    fetchUsers2() {},
+    ...mapActions(['fetchItems']), // Map fetchItems action to component methods
 
-        this.produtos = data;
-        this.sortOArrayProdutosZerados();
-        this.sortOArrayDescending();
-      } catch (error) {
-        console.error('Erro dados:', error);
+    async getDataPromisse() {
+      const [userResult, userCategory] = await Promise.allSettled([
+        this.$store.dispatch('fetchClientes'),
+        this.$store.dispatch('fetchProdutos'),
+        //this.fetchData(),
+        //this.fetchUsers2(),
+      ]);
+      if (userResult.status === 'rejected') {
+        console.log(userResult.reason);
+      }
+      if (userCategory.status === 'rejected') {
+        console.log(userResult.reason);
       }
     },
-    sortOArrayDescending() {
-      this.produtos.sort((a, b) => b.quantidadeEstoque - a.quantidadeEstoque);
 
-      this.produtosQuantidade10 = this.produtos.slice(0, 10);
+    sortOArrayDescending(arrayProdutos) {
+      arrayProdutos.sort((a, b) => b.quantidadeEstoque - a.quantidadeEstoque);
+
+      this.produtosQuantidade10 = arrayProdutos.slice(0, 10);
     },
-    sortOArrayProdutosZerados() {
-      console.log('produtoszerados', this.produtos);
-
-      this.produtosZerados = this.produtos.filter(
+    sortOArrayProdutosZerados(arrayProdutosZerados) {
+      this.produtosZerados = arrayProdutosZerados.filter(
         (item) => item.quantidadeEstoque === 0
       );
-      console.log(this.produtosZerados);
     },
   },
 
   created() {
-    this.fetchData();
+    // this.$store.dispatch('fetchProdutos');
+
+    this.getDataPromisse();
+    //this.fetchData();
   },
 };
 </script>
