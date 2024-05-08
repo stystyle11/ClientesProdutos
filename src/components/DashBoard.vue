@@ -200,7 +200,6 @@ export default {
 
   created() {
     // this.$store.dispatch('fetchProdutos');
-
     this.getDataPromisse();
     //this.fetchData();
   },
