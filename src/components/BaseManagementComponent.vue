@@ -7,13 +7,13 @@
   >
     <v-row class="ma-0 mt-4">
       <v-col
-        :cols="getColunas"
-        :md="getMds"
-        style="height: 400px"
+        cols="12"
+        sm="12"
+        xs="8"
         :class="['graphColumn', getMargin]"
       >
         <!-- Principal -->
-        <h3 class="font-weight-bold">Gerenciar {{ title }}</h3>
+        <h3 class="font-weight-bold mt-8">Gerenciar {{ title }}</h3>
         <v-divider
           width="100%"
           color="primary"
@@ -23,7 +23,7 @@
         <CrudComponent
           :items="this.items"
           :headers="this.headers"
-          @custom-event="handleEvent"
+          :endPoint="this.endPoint"
         >
         </CrudComponent>
       </v-col>
@@ -56,25 +56,15 @@ export default {
       type: String,
       required: true,
     },
+    endPoint: {
+      type: String,
+      required: true,
+    },
   },
 
   computed: {
     //...mapState('clientes', ['clientes']),
-    getMds() {
-      if (this.$vuetify.breakpoint.smAndDown) {
-        return 12;
-      } else if (this.$vuetify.breakpoint.mdOnly) {
-        return 14;
-      } else {
-        return 10;
-      }
-    },
-    getColunas() {
-      if (this.$vuetify.breakpoint.mdOnly) {
-        return 14;
-      }
-      return 14;
-    },
+
     getMargin() {
       if (this.$vuetify.breakpoint.lgAndUp) {
         return 'margin-auto mb-16';
@@ -84,15 +74,6 @@ export default {
     },
   },
   methods: {
-    handleEvent(data) {
-      console.log('Received data:', data);
-      if (data === 'valor') {
-        alert(data);
-      } else {
-        alert('outro dado');
-      }
-      // Handle the emitted event here
-    },
     async getDataPromisse() {
       const dataResult = await Promise.allSettled([
         this.$store.dispatch(this.url),

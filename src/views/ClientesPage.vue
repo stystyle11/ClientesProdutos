@@ -5,6 +5,7 @@
       :headers="this.headers"
       title="Clientes"
       url="fetchClientes"
+      endPoint="clientes"
     >
     </BaseManagement>
   </div>
@@ -26,6 +27,7 @@ export default {
         'Telefone',
         'idUsuario',
         'Data Registro',
+        'Ações',
       ],
     };
   },

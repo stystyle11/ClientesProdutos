@@ -2,76 +2,79 @@
   <v-container fluid>
     <v-row class="ma-0 justify-center">
       <v-col
-        cols="10"
-        md="10"
+        cols="12"
+        xl="8"
         :class="['graphColumn']"
-      ></v-col>
-      <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th
-                v-for="(header, index) in headers"
+      >
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th
+                  v-for="(header, index) in headers"
+                  :key="index"
+                  >{{ header }}</th
+                >
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="(item, index) in items"
                 :key="index"
-                >{{ header }}</th
               >
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              v-for="(item, index) in items"
-              :key="index"
-            >
-              <td
-                v-for="(value, key) in item"
-                :key="key"
-                >{{ value }}</td
-              >
-              <td>
-                <button @click="confirmAction"
-                  ><v-icon>mdi-delete</v-icon>Deletar</button
+                <td
+                  v-for="(value, key) in item"
+                  :key="key"
+                  >{{ value }}</td
                 >
-                <v-snackbar
-                  v-model="snackbar"
-                  :timeout="timeout"
-                  :color="color"
-                  :top="top"
-                  :content-font-size="fontsize"
+                <thead>
+                  <tr>
+                    <td>
+                      <button @click="confirmAction"
+                        ><v-icon>mdi-delete</v-icon>Deletar</button
+                      >
+                      <v-snackbar
+                        v-model="snackbar"
+                        :timeout="timeout"
+                        :color="color"
+                        :top="top"
+                        :content-font-size="fontsize"
+                      >
+                        {{ text }}
+                        <v-btn
+                          text
+                          @click="snackbar = false"
+                          >Fechar</v-btn
+                        >
+                      </v-snackbar> </td
+                    ><td>
+                      <button @click="showToast"
+                        >Editar<v-icon>mdi-pencil</v-icon></button
+                      >
+                    </td>
+                  </tr>
+                </thead>
+                <div
+                  v-if="showConfirmation"
+                  class="modal"
                 >
-                  {{ text }}
-                  <v-btn
-                    text
-                    @click="snackbar = false"
-                    >Fechar</v-btn
-                  >
-                </v-snackbar> </td
-              ><td>
-                <button @click="showToast"
-                  >Editar<v-icon>mdi-pencil</v-icon></button
-                >
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <div>
-          <!-- Confirmation dialog -->
-          <div
-            v-if="showConfirmation"
-            class="modal"
-          >
-            <div class="modal-content">
-              <span
-                class="close"
-                @click="cancelConfirmation"
-                >&times;</span
-              >
-              <p>Are you sure you want to perform this action?</p>
-              <button @click="performAction">Yes</button>
-              <button @click="cancelConfirmation">No</button>
-            </div>
-          </div>
+                  <div class="modal-content">
+                    <span
+                      class="close"
+                      @click="cancelConfirmation"
+                      >&times;</span
+                    >
+                    <p>Are you sure you want to perform this action?</p>
+                    <button @click="deleteItem(item.id)">Yes</button>
+                    <button @click="cancelConfirmation">No</button>
+                  </div>
+                </div>
+              </tr>
+            </tbody>
+            <!-- Confirmation dialog -->
+          </table>
         </div>
-      </div>
+      </v-col>
     </v-row>
   </v-container>
 </template>
@@ -85,6 +88,10 @@ export default {
     },
     items: {
       type: Array,
+      required: true,
+    },
+    endPoint: {
+      type: String,
       required: true,
     },
   },
@@ -108,22 +115,39 @@ export default {
     cancelConfirmation() {
       this.showConfirmation = false;
     },
-    performAction() {
-      this.$emit('custom-event', this.headers[3]);
-      console.log(this.showConfirmation);
-      console.log('Action performed!');
 
-      // Close the confirmation dialog
-      this.showConfirmation = false;
+    async deleteItem(itemId) {
+      try {
+        const response = await fetch(
+          //http://localhost:3400/produtos/1
+          `http://localhost:3400/${this.endPoint}/${itemId}`,
+          {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+              // Add any other headers if needed
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error('Failed to delete item');
+        }
+
+        // Item deleted successfully, handle the response as needed
+        console.log('Item deleted successfully');
+        this.showConfirmation = false;
+      } catch (error) {
+        // Handle any errors that occur during the delete request
+        console.error('Error deleting item:', error.message);
+      }
     },
+
     editItem(index) {
       // Emit an event or call a method to handle edit action
       this.$emit('edit', index);
     },
-    deleteItem(index) {
-      // Emit an event or call a method to handle delete action
-      this.$emit('delete', index);
-    },
+
     showSnackbar() {
       this.snackbar = true;
     },
@@ -147,6 +171,7 @@ export default {
   overflow-x: auto;
   width: fit-content;
 }
+
 .graphColumn {
   padding: 10px;
   margin: auto;
@@ -186,7 +211,7 @@ button {
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgb(0 0 0 / 2%);
 }
 
 .modal-content {
@@ -213,5 +238,10 @@ button {
   color: black;
   text-decoration: none;
   cursor: pointer;
+}
+@media (min-width: 1920px) {
+  .table-container {
+    width: fit-content;
+  }
 }
 </style>

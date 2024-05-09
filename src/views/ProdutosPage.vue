@@ -5,6 +5,7 @@
       :headers="this.headers"
       title="Produtos"
       url="fetchProdutos"
+      endPoint="produtos"
     >
     </BaseManagement>
   </div>
@@ -23,9 +24,9 @@ export default {
         'Nome',
         'Quantidade',
         'Valor',
-        'Data Cadastro',
         'Observação',
-        'Data Registro',
+        'Data Cadastro',
+        'Ações',
       ],
     };
   },
