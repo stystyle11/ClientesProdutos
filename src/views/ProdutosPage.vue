@@ -1,10 +1,10 @@
 <template>
   <div>
     <BaseManagement
-      :items="this.$store.state.clientes.clientes"
+      :items="this.$store.state.produtos.produtos"
       :headers="this.headers"
-      title="Clientes"
-      url="fetchClientes"
+      title="Produtos"
+      url="fetchProdutos"
     >
     </BaseManagement>
   </div>
@@ -21,10 +21,10 @@ export default {
       headers: [
         'ID',
         'Nome',
-        'CPF',
-        'Email',
-        'Telefone',
-        'idUsuario',
+        'Quantidade',
+        'Valor',
+        'Data Cadastro',
+        'Observação',
         'Data Registro',
       ],
     };

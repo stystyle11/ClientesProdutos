@@ -1,10 +1,10 @@
 <template>
   <v-container fluid>
-    <v-row class="ma-0">
+    <v-row class="ma-0 justify-center">
       <v-col
         cols="10"
         md="10"
-        :class="['graphColumn', getMargin]"
+        :class="['graphColumn']"
       ></v-col>
       <div class="table-container">
         <table>
@@ -54,8 +54,6 @@
           </tbody>
         </table>
         <div>
-          <button @click="confirmAction">Perform Action</button>
-
           <!-- Confirmation dialog -->
           <div
             v-if="showConfirmation"
@@ -97,20 +95,22 @@ export default {
       text: 'Lorem ipsum dolor sit amet',
       vertical: true,
       top: true,
+      timeout: 3000,
+      color: 'black',
       fontsize: '12rem',
       showConfirmation: false,
     };
   },
   methods: {
     confirmAction() {
-      console.log(this.showConfirmation);
       this.showConfirmation = true;
     },
     cancelConfirmation() {
       this.showConfirmation = false;
     },
     performAction() {
-      // Perform the action here
+      this.$emit('custom-event', this.headers[3]);
+      console.log(this.showConfirmation);
       console.log('Action performed!');
 
       // Close the confirmation dialog
@@ -145,6 +145,7 @@ export default {
 <style scoped>
 .table-container {
   overflow-x: auto;
+  width: fit-content;
 }
 .graphColumn {
   padding: 10px;
@@ -155,7 +156,7 @@ export default {
   bottom: 500px; /* Change vertical position */
 }
 table {
-  width: 90%;
+  width: 100%;
   border-collapse: collapse;
   margin: auto;
 }
