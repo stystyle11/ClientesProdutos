@@ -1,82 +1,61 @@
 <template>
-  <v-container fluid>
-    <v-row class="ma-0 justify-center">
-      <v-col
-        cols="12"
-        xl="8"
-        :class="['graphColumn']"
-      >
-        <div class="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th
-                  v-for="(header, index) in headers"
-                  :key="index"
-                  >{{ header }}</th
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th
+            v-for="(header, index) in headers"
+            :key="index"
+            >{{ header }}</th
+          >
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          v-for="item in items"
+          :key="item.id"
+          @click="getRowIndex(item.id)"
+        >
+          <td
+            v-for="value in item"
+            :key="value.id"
+            >{{ value }}
+
+            <div
+              v-if="showConfirmation"
+              class="modal"
+            >
+              <div class="modal-content">
+                <span
+                  class="close"
+                  @click="cancelConfirmation"
+                  >&times;</span
                 >
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                v-for="(item, index) in items"
-                :key="index"
-              >
-                <td
-                  v-for="(value, key) in item"
-                  :key="key"
-                  >{{ value }}</td
+                <p>Tem certeza que deseja deletar esse item ?</p>
+                <button @click="deleteItem(rowIndex)">Yes</button>
+                <button @click="cancelConfirmation">No</button>
+              </div>
+            </div>
+          </td>
+          <thead>
+            <tr>
+              <td>
+                <button @click="confirmAction">
+                  <v-icon>mdi-delete</v-icon>Deletar
+                </button>
+              </td>
+              <td>
+                <button @click="showToast"
+                  >Editar<v-icon>mdi-pencil</v-icon></button
                 >
-                <thead>
-                  <tr>
-                    <td>
-                      <button @click="confirmAction"
-                        ><v-icon>mdi-delete</v-icon>Deletar</button
-                      >
-                      <v-snackbar
-                        v-model="snackbar"
-                        :timeout="timeout"
-                        :color="color"
-                        :top="top"
-                        :content-font-size="fontsize"
-                      >
-                        {{ text }}
-                        <v-btn
-                          text
-                          @click="snackbar = false"
-                          >Fechar</v-btn
-                        >
-                      </v-snackbar> </td
-                    ><td>
-                      <button @click="showToast"
-                        >Editar<v-icon>mdi-pencil</v-icon></button
-                      >
-                    </td>
-                  </tr>
-                </thead>
-                <div
-                  v-if="showConfirmation"
-                  class="modal"
-                >
-                  <div class="modal-content">
-                    <span
-                      class="close"
-                      @click="cancelConfirmation"
-                      >&times;</span
-                    >
-                    <p>Are you sure you want to perform this action?</p>
-                    <button @click="deleteItem(item.id)">Yes</button>
-                    <button @click="cancelConfirmation">No</button>
-                  </div>
-                </div>
-              </tr>
-            </tbody>
-            <!-- Confirmation dialog -->
-          </table>
-        </div>
-      </v-col>
-    </v-row>
-  </v-container>
+              </td>
+            </tr>
+          </thead>
+        </tr>
+      </tbody>
+      <!-- Confirmation dialog -->
+    </table>
+  </div>
 </template>
 
 <script>
@@ -106,9 +85,13 @@ export default {
       color: 'black',
       fontsize: '12rem',
       showConfirmation: false,
+      rowIndex: 0,
     };
   },
   methods: {
+    getRowIndex(index) {
+      this.rowIndex = index;
+    },
     confirmAction() {
       this.showConfirmation = true;
     },
@@ -118,6 +101,7 @@ export default {
 
     async deleteItem(itemId) {
       try {
+        console.log(`${this.endPoint}${itemId}`);
         const response = await fetch(
           //http://localhost:3400/produtos/1
           `http://localhost:3400/${this.endPoint}/${itemId}`,
@@ -136,6 +120,7 @@ export default {
 
         // Item deleted successfully, handle the response as needed
         console.log('Item deleted successfully');
+        this.$emit('reload-event');
         this.showConfirmation = false;
       } catch (error) {
         // Handle any errors that occur during the delete request
@@ -211,7 +196,7 @@ button {
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgb(0 0 0 / 2%);
+  background-color: rgb(0 0 0 /0.5%);
 }
 
 .modal-content {

@@ -5,11 +5,12 @@
       marginLeft: $vuetify.breakpoint.lgOnly ? '10%' : '0',
     }"
   >
-    <v-row class="ma-0 mt-4">
+    <v-row class="ma-0 mt-0">
       <v-col
         cols="12"
         sm="12"
-        xs="8"
+        lg="10"
+        xl="8"
         :class="['graphColumn', getMargin]"
       >
         <!-- Principal -->
@@ -24,6 +25,7 @@
           :items="this.items"
           :headers="this.headers"
           :endPoint="this.endPoint"
+          @reload-event="getDataPromise"
         >
         </CrudComponent>
       </v-col>
@@ -74,7 +76,7 @@ export default {
     },
   },
   methods: {
-    async getDataPromisse() {
+    async getDataPromise() {
       const dataResult = await Promise.allSettled([
         this.$store.dispatch(this.url),
       ]);
@@ -85,7 +87,7 @@ export default {
   },
 
   created() {
-    this.getDataPromisse();
+    this.getDataPromise();
   },
 };
 </script>
