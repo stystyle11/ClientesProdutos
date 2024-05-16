@@ -1,12 +1,12 @@
 <template>
-  <button @click="navigateToRoute">{{ buttonText }}</button>
+  <!--<v-btn @click="navigateToRoute"> </v-btn>-->
+  <button @click="navigateToRoute"> </button>
 </template>
 
 <script>
 export default {
   props: {
     routeName: String,
-    buttonText: String,
   },
   methods: {
     navigateToRoute() {

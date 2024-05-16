@@ -14,7 +14,7 @@
         <tr
           v-for="item in items"
           :key="item.id"
-          @click="getRowIndex(item.id)"
+          @click="getRowIndex(item)"
         >
           <td
             v-for="value in item"
@@ -45,7 +45,7 @@
                 </button>
               </td>
               <td>
-                <button @click="showToast"
+                <button @click="changeToRoute(item)"
                   >Editar<v-icon>mdi-pencil</v-icon></button
                 >
               </td>
@@ -76,21 +76,22 @@ export default {
   },
   data() {
     return {
-      snackbar: false,
-
-      text: 'Lorem ipsum dolor sit amet',
-      vertical: true,
-      top: true,
-      timeout: 3000,
-      color: 'black',
-      fontsize: '12rem',
       showConfirmation: false,
       rowIndex: 0,
     };
   },
+
   methods: {
+    changeToRoute(item) {
+      let route;
+      console.log('mama', this.endPoint);
+      this.endPoint === 'clientes'
+        ? (route = `/editar/cliente/${item.id}`)
+        : (route = `/editar/produto/${item.id}`);
+      this.$router.push(route);
+    },
     getRowIndex(index) {
-      this.rowIndex = index;
+      this.rowIndex = index.id;
     },
     confirmAction() {
       this.showConfirmation = true;
@@ -101,15 +102,12 @@ export default {
 
     async deleteItem(itemId) {
       try {
-        console.log(`${this.endPoint}${itemId}`);
         const response = await fetch(
-          //http://localhost:3400/produtos/1
           `http://localhost:3400/${this.endPoint}/${itemId}`,
           {
             method: 'DELETE',
             headers: {
               'Content-Type': 'application/json',
-              // Add any other headers if needed
             },
           }
         );
@@ -118,28 +116,21 @@ export default {
           throw new Error('Failed to delete item');
         }
 
-        // Item deleted successfully, handle the response as needed
-        console.log('Item deleted successfully');
+        this.showToast();
         this.$emit('reload-event');
         this.showConfirmation = false;
       } catch (error) {
-        // Handle any errors that occur during the delete request
         console.error('Error deleting item:', error.message);
       }
-    },
-
-    editItem(index) {
-      // Emit an event or call a method to handle edit action
-      this.$emit('edit', index);
     },
 
     showSnackbar() {
       this.snackbar = true;
     },
     showToast() {
-      this.$toasted.show('Hello, this is a toast message!', {
+      this.$toasted.show('Item deletado com sucesso!', {
         duration: 3000, // Duration in milliseconds
-        position: 'top-right', // Toast position (top-left, top-right, bottom-left, bottom-right)
+        position: 'top-center', // Toast position (top-left, top-right, bottom-left, bottom-right)
         type: 'success', // Toast type (success, error, info, warn)
       });
     },

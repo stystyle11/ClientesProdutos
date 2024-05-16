@@ -34,5 +34,8 @@ export default {
       console.log('retornando do vuex CLIENTES', state.clientes);
       return state.clientes;
     },
+    getClienteById: (state) => (id) => {
+      return state.clientes.find((cliente) => cliente.id === id);
+    },
   },
 };

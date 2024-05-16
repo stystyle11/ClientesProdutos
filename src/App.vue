@@ -6,33 +6,38 @@
       class="sidebar"
       :mini-variant="miniVariant"
     >
-      <v-list
-        @click.stop="toggleDrawer"
-        dense
-      >
+      <v-list dense>
         <v-toolbar-title
           class="text-center mb-12 d-flex justify-center align-center"
           style="height: 50px"
           >Menu</v-toolbar-title
         >
-        <v-list-item-group>
-          <v-list-item
-            v-for="(item, index) in items"
-            :key="index"
-            link
+        <v-list>
+          <router-link
+            v-for="item in items"
+            :key="item.name"
+            :to="{ name: item.route }"
+            tag="v-list-item"
+            class="list-item"
           >
             <v-list-item-icon>
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-item-icon>
-            <ButtonComponent
-              routeName="Home"
-              buttonText="Go to Home"
-            ></ButtonComponent>
+
             <v-list-item-content>
               <v-list-item-title>{{ item.title }}</v-list-item-title>
             </v-list-item-content>
-          </v-list-item>
-        </v-list-item-group>
+          </router-link>
+        </v-list>
+        <v-list-item
+          v-if="$vuetify.breakpoint.mdAndDown"
+          @click.stop="toggleDrawer"
+        >
+          <v-icon style="margin-right: 20px">mdi-arrow-left</v-icon>
+          <v-list-item-content>
+            <v-list-item-title> Fechar</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
 
@@ -42,7 +47,7 @@
         @click.stop="toggleDrawer"
         v-if="$vuetify.breakpoint.mdAndDown"
       ></v-app-bar-nav-icon>
-      <v-toolbar-title>Gerenciador Produtos</v-toolbar-title>
+      <v-toolbar-title>Dashboard Empresarial</v-toolbar-title>
     </v-app-bar>
 
     <v-main
@@ -57,11 +62,11 @@
 </template>
 
 <script>
-import ButtonComponent from './components/ButtonComponent.vue';
+//import ButtonComponent from './components/ButtonComponent.vue';
 export default {
   name: 'App',
   components: {
-    ButtonComponent,
+    //ButtonComponent,
   },
 
   data() {
@@ -70,9 +75,16 @@ export default {
       miniVariant: false,
 
       items: [
-        { title: 'Dashboard', icon: 'mdi-view-dashboard' },
-        { title: 'Messages', icon: 'mdi-email' },
-        { title: 'Settings', icon: 'mdi-settings' },
+        {
+          title: 'Gerenciar Produtos',
+          icon: 'mdi-view-dashboard',
+          route: 'produtos',
+        },
+        {
+          title: 'Gerenciar Clientes',
+          icon: 'mdi-account-circle',
+          route: 'clientes',
+        },
       ],
     };
   },
@@ -95,5 +107,10 @@ export default {
 }
 .no-padding {
   padding: 0 !important;
+}
+.list-item {
+  display: flex;
+  align-items: center;
+  padding: 5px;
 }
 </style>

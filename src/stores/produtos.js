@@ -16,6 +16,7 @@ export default {
   },
   actions: {
     async fetchProdutos({ commit }) {
+      console.log('do vuex chamando');
       try {
         const response = await fetch('http://localhost:3400/produtos');
         if (!response.ok) {
@@ -35,6 +36,9 @@ export default {
     getProdutos(state) {
       console.log('retornando do vuex produtos', state.produtos);
       return state.produtos;
+    },
+    getProdutoById: (state) => (id) => {
+      return state.produtos.find((produto) => produto.id === id);
     },
   },
 };

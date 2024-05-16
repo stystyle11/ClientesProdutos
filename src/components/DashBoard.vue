@@ -1,16 +1,12 @@
-<template>
-  <v-container
-    fluid
-    :style="{
-      marginLeft: $vuetify.breakpoint.lgOnly ? '10%' : '0',
-    }"
-  >
-    <v-row class="ma-0 mt-4">
+v-col<template>
+  <v-container fluid>
+    <v-row class="mt-4 custom-ml">
       <v-col
-        :cols="getColunas"
-        :md="getMds"
+        cols="12"
+        md="5"
+        xl="5"
         style="height: 400px"
-        :class="['graphColumn', getMargin]"
+        class="mb-8"
       >
         <!-- Main content -->
         <h3 class="font-weight-bold">Produtos maior Estoque</h3>
@@ -20,7 +16,7 @@
           style="margin-bottom: 2rem"
         ></v-divider>
         <ChartComponent
-          v-if="arrayGrafico10QuantidadeProdutos.length == 10"
+          v-if="arrayGrafico10QuantidadeProdutos.length === 10"
           label="Quantidade / Produto"
           :graphData="arrayGrafico10QuantidadeProdutos"
           :labels="arrayGrafico10NomeProdutos"
@@ -28,15 +24,16 @@
       </v-col>
 
       <v-col
-        :cols="getColunas"
-        :md="getMds"
+        cols="12"
+        md="5"
+        xl="5"
         style="height: 400px"
-        :class="['graphColumn', getMargin]"
+        class="mb-8"
       >
         <!-- Main content -->
         <h3 class="font-weight-bold">Produtos Zerados</h3>
         <v-divider
-          width="90%"
+          width="100%"
           color="primary"
           style="margin-bottom: 2rem"
         ></v-divider>
@@ -47,9 +44,11 @@
           :labels="arrayGraficoDataProdutosZerados"
         />
       </v-col>
+
       <v-col
         cols="12"
-        md="6"
+        md="5"
+        xl="5"
         style="height: 200px"
       >
         <v-card
@@ -64,9 +63,11 @@
           </v-card-text>
         </v-card>
       </v-col>
+
       <v-col
         cols="12"
-        md="6"
+        md="5"
+        xl="5"
         style="height: 200px"
       >
         <v-card
@@ -87,23 +88,20 @@
 
 <script>
 import ChartComponent from '@/components/ChartBaseComponent';
-
 import { mapActions } from 'vuex';
+
 export default {
   components: {
     ChartComponent,
   },
-
   data() {
     return {
       drawer: true,
       miniVariant: false,
-
       produtosQuantidade10: [],
       produtosZerados: [],
       shouldHandleProdutosChange: false,
       shouldHandleClientesChange: false,
-
       items: [
         { title: 'Dashboard', icon: 'mdi-view-dashboard' },
         { title: 'Messages', icon: 'mdi-email' },
@@ -121,30 +119,8 @@ export default {
     arrayGrafico10QuantidadeProdutos() {
       return this.produtosQuantidade10.map((item) => item.quantidadeEstoque);
     },
-
     arrayGrafico10NomeProdutos() {
       return this.produtosQuantidade10.map((item) => item.nome);
-    },
-    getMds() {
-      if (this.$vuetify.breakpoint.mdAndDown) {
-        return 10;
-      }
-      return 5;
-    },
-    getColunas() {
-      if (this.$vuetify.breakpoint.mdAndDown) {
-        return 12;
-      }
-      return 5;
-    },
-    getMargin() {
-      if (this.$vuetify.breakpoint.mdAndUp) {
-        return 'margin-left:500px';
-      } else if (this.$vuetify.breakpoint.lgAndUp) {
-        return 'margin-auto mb-16';
-      } else {
-        return 'mb-16';
-      }
     },
   },
   watch: {
@@ -163,20 +139,15 @@ export default {
       }
     },
   },
-
   methods: {
     toggleDrawer() {
       this.drawer = !this.drawer;
     },
-    fetchUsers2() {},
     ...mapActions(['fetchItems']), // Map fetchItems action to component methods
-
     async getDataPromisse() {
       const [userResult, userCategory] = await Promise.allSettled([
         this.$store.dispatch('fetchClientes'),
         this.$store.dispatch('fetchProdutos'),
-        //this.fetchData(),
-        //this.fetchUsers2(),
       ]);
       if (userResult.status === 'rejected') {
         console.log(userResult.reason);
@@ -185,10 +156,8 @@ export default {
         console.log(userResult.reason);
       }
     },
-
     sortOArrayDescending(arrayProdutos) {
       arrayProdutos.sort((a, b) => b.quantidadeEstoque - a.quantidadeEstoque);
-
       this.produtosQuantidade10 = arrayProdutos.slice(0, 10);
     },
     sortOArrayProdutosZerados(arrayProdutosZerados) {
@@ -197,25 +166,21 @@ export default {
       );
     },
   },
-
   created() {
-    // this.$store.dispatch('fetchProdutos');
     this.getDataPromisse();
-    //this.fetchData();
   },
 };
 </script>
 
 <style scoped>
-.sidebar {
-  background-color: #f5f5f5;
-}
 .graphColumn {
   padding: 10px;
   margin: auto;
   margin-bottom: 5em;
 }
-.no-padding {
-  padding: 0 !important;
+@media (min-width: 1280px) {
+  .custom-ml {
+    margin-left: 256px; /* Set your desired margin value here */
+  }
 }
 </style>

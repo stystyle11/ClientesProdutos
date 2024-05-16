@@ -1,7 +1,19 @@
 <template>
   <div>
+    <v-row justify="end">
+      <v-col cols="10">
+        <div class="cols-10 d-flex justify-end">
+          <v-btn
+            class="botao"
+            color="primary"
+            @click="goToRoute"
+            >Acrescentar Produto</v-btn
+          >
+        </div>
+      </v-col>
+    </v-row>
     <BaseManagement
-      :items="this.$store.state.produtos.produtos"
+      :items="$store.state.produtos.produtos"
       :headers="this.headers"
       title="Produtos"
       url="fetchProdutos"
@@ -22,15 +34,24 @@ export default {
       headers: [
         'ID',
         'Nome',
-        'Quantidade',
         'Valor',
+        'Quantidade',
         'Observação',
         'Data Cadastro',
         'Ações',
       ],
     };
   },
+  methods: {
+    goToRoute() {
+      this.$router.push('/adicionar/produto');
+    },
+  },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.botao {
+  margin: 36px 0 0 0;
+}
+</style>
