@@ -135,10 +135,6 @@ export default {
       });
     },
   },
-
-  created() {
-    console.log(this.$store.state.clientes.clientes);
-  },
 };
 </script>
 

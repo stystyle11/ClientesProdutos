@@ -130,7 +130,6 @@ export default {
 
       const validationResult = this.checkForm();
       if (!validationResult.isValid) {
-        console.log(validationResult);
         this.formErrors = validationResult.errors;
 
         return;
@@ -146,13 +145,10 @@ export default {
       for (const field in this.formData) {
         if (this.formData[field].length === 0) {
           errors[field] = `Este campo está vazio`;
-
-          console.log('eeros', errors);
         } else {
           const regex = /[!#$%^&*()_+\-=[\]{};':"\\|,<>/?]+/;
 
           if (regex.test(this.formData[field])) {
-            console.log('eeros', errors);
             errors[field] = `Este campo contém caracteres não permitidos`;
           }
         }

@@ -87,7 +87,8 @@ export default {
   },
 
   created() {
-    // this.getDataPromise();
+    // Se usuario der reload
+    this.getDataPromise();
   },
 };
 </script>

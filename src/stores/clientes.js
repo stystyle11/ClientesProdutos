@@ -21,8 +21,6 @@ export default {
         }
         const data = await response.json();
         commit('SET_CLIENTES', data);
-
-        console.log('do vuex clientes', data);
       } catch (error) {
         console.error('Error fetching items:', error);
         throw error;
@@ -31,7 +29,6 @@ export default {
   },
   getters: {
     getClientes(state) {
-      console.log('retornando do vuex CLIENTES', state.clientes);
       return state.clientes;
     },
     getClienteById: (state) => (id) => {

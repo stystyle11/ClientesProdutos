@@ -14,7 +14,6 @@ export default {
   },
   actions: {
     async fetchProdutos({ commit }) {
-      console.log('do vuex chamando');
       try {
         const response = await fetch('http://localhost:3400/produtos');
         if (!response.ok) {
@@ -22,8 +21,6 @@ export default {
         }
         const data = await response.json();
         commit('SET_PRODUTOS', data);
-
-        console.log('do vuex', data);
       } catch (error) {
         console.error('Error fetching items:', error);
         throw error;
@@ -32,7 +29,6 @@ export default {
   },
   getters: {
     getProdutos(state) {
-      console.log('retornando do vuex produtos', state.produtos);
       return state.produtos;
     },
     getProdutoById: (state) => (id) => {
