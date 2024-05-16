@@ -84,7 +84,7 @@ export default {
   methods: {
     changeToRoute(item) {
       let route;
-      console.log('mama', this.endPoint);
+
       this.endPoint === 'clientes'
         ? (route = `/editar/cliente/${item.id}`)
         : (route = `/editar/produto/${item.id}`);

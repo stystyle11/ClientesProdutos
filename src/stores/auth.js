@@ -1,5 +1,3 @@
-// store.js
-
 import Vue from 'vue';
 import Vuex from 'vuex';
 
@@ -45,8 +43,5 @@ export default new Vuex.Store({
       commit('logout');
     },
   },
-  getters: {
-    // isAuthenticated: (state) => state.isAuthenticated,
-    // user: (state) => state.user,
-  },
+  getters: {},
 });

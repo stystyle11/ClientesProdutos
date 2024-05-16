@@ -87,7 +87,7 @@ export default {
   },
 
   created() {
-    this.getDataPromise();
+    // this.getDataPromise();
   },
 };
 </script>

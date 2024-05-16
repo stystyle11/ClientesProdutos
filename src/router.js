@@ -1,18 +1,18 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-////import Home from './views/Produtos.vue';
+
 import DashBoard from '@/components/DashBoard.vue';
 import Clientes from '@/views/ClientesPage.vue';
 import Produtos from '@/views/ProdutosPage.vue';
 import store from '@/stores';
-//import ClientesForm from '@/views/FormClientePage.vue';
+
 import FormClienteComponent from './components/FormClienteComponent.vue';
 import FormProdutoComponent from './components/FormProdutoComponent.vue';
 import LoginPage from './components/FormLoginComponent.vue';
 Vue.use(VueRouter);
 
 const routes = [
-  //{ path: '/', component: Home },
+  { path: '/', component: DashBoard },
   { path: '/dashboard', component: DashBoard },
   { path: '/clientes', name: 'clientes', component: Clientes },
   { path: '/produtos', name: 'produtos', component: Produtos },
@@ -24,7 +24,7 @@ const routes = [
 ];
 
 const router = new VueRouter({
-  mode: 'history', // Enable HTML5 History mode
+  mode: 'history',
   routes,
 });
 router.beforeEach((to, from, next) => {
